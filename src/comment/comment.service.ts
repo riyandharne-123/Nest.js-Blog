@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Queue } from 'bull';
 import { PostRepository } from 'src/post/post.repository';
 import { CommentRepository } from './comment.repository';
 import { CreateCommentDto } from './dto/create-comments.dto';
@@ -14,6 +16,8 @@ export class CommentService {
 
         @InjectRepository(PostRepository)
         private postRepository: PostRepository,
+
+        @InjectQueue('comment-notification') private commentNotificationQueue: Queue
     ){}
 
     async getComments(data): Promise<any> {
@@ -37,7 +41,13 @@ export class CommentService {
     }
 
     async create(createCommentDto: CreateCommentDto): Promise<any> {
-        return await this.commentRepository.createComment(createCommentDto);
+        const comment = await this.commentRepository.createComment(createCommentDto);
+        
+        await this.commentNotificationQueue.add({
+            'comment': comment
+        });
+        
+        return comment;
     }
 
     async update(updateCommentDto: UpdateCommentDto): Promise<any> {

@@ -8,9 +8,10 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
 import { RedisModule } from './redis/redis.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), RedisModule, AuthModule, PostModule, CommentModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), RedisModule, QueueModule, AuthModule, PostModule, CommentModule],
   controllers: [AppController],
   providers: [AppService],
 })

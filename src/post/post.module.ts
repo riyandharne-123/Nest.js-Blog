@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as redisStore from 'cache-manager-redis-store';
 import { CacheModule, Module } from '@nestjs/common';
-import type { RedisClientOptions } from 'redis';
 
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -24,12 +23,12 @@ import { PostService } from './post.service';
         expiresIn: 3600,
       }
     }),
-    CacheModule.register<RedisClientOptions>({
-      store: redisStore,
-      socket: {
+    CacheModule.registerAsync({
+      useFactory: async() => ({
+        store: redisStore,
         host: 'localhost',
-        port: 6379,
-      },
+        port: 6379
+      })
     }),
   ],
   controllers: [PostController],

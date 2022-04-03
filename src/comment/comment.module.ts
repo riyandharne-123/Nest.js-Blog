@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as redisStore from 'cache-manager-redis-store';
 import { CacheModule, Module } from '@nestjs/common';
-import type { RedisClientOptions } from 'redis';
 
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -12,6 +11,7 @@ import { CommentController } from './comment.controller';
 
 import { CommentRepository } from './comment.repository';
 import { CommentService } from './comment.service';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -23,13 +23,22 @@ import { CommentService } from './comment.service';
         expiresIn: 3600,
       }
     }),
-    CacheModule.register<RedisClientOptions>({
-      store: redisStore,
-      socket: {
+    CacheModule.registerAsync({
+      useFactory: async() => ({
+        store: redisStore,
         host: 'localhost',
-        port: 6379,
-      },
+        port: 6379
+      })
     }),
+    BullModule.registerQueue(
+      {
+        name: 'comment-notification',
+        redis: {
+          host: 'localhost',
+          port: 6379,
+        },
+      }
+    )
   ],
   controllers: [CommentController],
   providers: [CommentService, RedisService]
