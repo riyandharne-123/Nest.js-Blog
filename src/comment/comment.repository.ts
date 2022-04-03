@@ -9,7 +9,7 @@ export class CommentRepository extends Repository<Comment> {
 
     async getComment(comment_id): Promise<Comment> {
         return await Comment.createQueryBuilder('comment')
-        .select(['comment.comment_id', 'comment.user_id', 'comment.text', 'user.user_id', 'user.name'])
+        .select(['comment.comment_id', 'comment.user_id', 'comment.text', 'user.user_id', 'user.name', 'user.email'])
         .leftJoin('comment.user', 'user')
         .where('comment.comment_id = :comment_id', { comment_id })
         .getOne()
