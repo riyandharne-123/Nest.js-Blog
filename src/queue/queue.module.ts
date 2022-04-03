@@ -23,8 +23,8 @@ import { CommentRepository } from 'src/comment/comment.repository';
         host: 'smtp.mailtrap.io',
         port: 2525,
         auth: {
-          user: "e9cf0f5d1c9946",
-          pass: "f3bc362ce31479"
+          user: "",
+          pass: ""
         }
       },
       defaults: {
