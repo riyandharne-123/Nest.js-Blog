@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
 
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 
 import { UserLoginDto } from './dto/user-login.dto';

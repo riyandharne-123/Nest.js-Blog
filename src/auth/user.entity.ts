@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Comment } from 'src/comment/comment.entity';
-import { Post } from 'src/post/post.entity';
-import { BaseEntity, PrimaryGeneratedColumn, Entity, Column, Unique, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Comment } from '../comment/comment.entity';
+import { Post } from '../post/post.entity';
+import { BaseEntity, PrimaryGeneratedColumn, Entity, Column, Unique, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity()
 @Unique(['email'])

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { User } from 'src/auth/user.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { User } from '../auth/user.entity';
+import { Comment } from '../comment/comment.entity';
 import { BaseEntity, PrimaryGeneratedColumn, Entity, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
