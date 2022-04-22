@@ -21,7 +21,7 @@ describe('AuthController (e2e)', () => {
   let jwtStrategy: JwtStrategy;
   let userRepository: Repository<User>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
           AuthModule,
@@ -69,6 +69,93 @@ describe('AuthController (e2e)', () => {
         created_at: expect.any(String),
         updated_at: expect.any(String),
         token: expect.any(String)
+    })
+
+    await userRepository.remove(user)
+
+    return data
+  });
+
+  it('/auth/login (POST)', async () => {
+    const userRegisterDto = {
+      name: 'test1234',
+      email: 'test12as3a45@test12345678.com',
+      password: '1234'   
+    }
+
+    await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(userRegisterDto)
+      .expect(201)
+
+    const userLoginDto = {
+        email: 'test12as3a45@test12345678.com',
+        password: '1234'   
+    }
+
+    const data = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send(userLoginDto)
+      .expect(201)
+
+    const response = data.body
+
+    const user = await userRepository.findOne(response.user_id)
+
+    expect(response).toEqual({
+        email: userRegisterDto.email,
+        name: userRegisterDto.name,
+        password: user.password,
+        user_id: user.user_id,
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
+        token: expect.any(String)
+    })
+
+    await userRepository.remove(user)
+
+    return data
+  });
+
+  it('/auth/user (GET)', async () => {
+    const userRegisterDto = {
+      name: 'test1234',
+      email: 'test12as3a45@test12345678.com',
+      password: '1234'   
+    }
+
+    const login = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(userRegisterDto)
+      .expect(201)
+
+    const response = login.body
+
+    const user = await userRepository.findOne(response.user_id)
+
+    expect(response).toEqual({
+      email: userRegisterDto.email,
+      name: userRegisterDto.name,
+      password: user.password,
+      user_id: user.user_id,
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+      token: expect.any(String)
+    })
+
+    const data = await request(app.getHttpServer())
+      .get('/auth/user')
+      .set('Authorization', `Bearer ${response.token}`)
+      .expect(200)
+
+    expect(response).toEqual({
+      email: userRegisterDto.email,
+      name: userRegisterDto.name,
+      password: user.password,
+      user_id: user.user_id,
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+      token: expect.any(String)
     })
 
     await userRepository.remove(user)
