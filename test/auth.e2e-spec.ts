@@ -11,14 +11,10 @@ import { Repository } from 'typeorm/repository/Repository';
 import { typeOrmConfig } from '../src/config/typeorm.config';
 import { UserRepository } from '../src/auth/user.repository';
 import { AuthModule } from '../src/auth/auth.module';
-import { AuthService } from '../src/auth/auth.service';
-import { JwtStrategy } from '../src/auth/jwt.strategy';
 import { User } from '../src/auth/user.entity';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let authService: AuthService;
-  let jwtStrategy: JwtStrategy;
   let userRepository: Repository<User>;
 
   beforeAll(async () => {
@@ -37,8 +33,6 @@ describe('AuthController (e2e)', () => {
         ],
     }).compile();
 
-    authService = moduleFixture.get<AuthService>(AuthService);
-    jwtStrategy = moduleFixture.get<JwtStrategy>(JwtStrategy);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
 
     app = moduleFixture.createNestApplication();
